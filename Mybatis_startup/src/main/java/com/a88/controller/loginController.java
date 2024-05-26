@@ -22,9 +22,8 @@ public class loginController {
 
 
     @PostMapping("/login")
-
     public result login(@RequestBody employee emp) {
-        log.info    .info("employee: {}", emp);
+        log.info("employee: {}", emp);
         employee e =  empService.login(emp);
 
         // login successful, generate JWT, give JWT

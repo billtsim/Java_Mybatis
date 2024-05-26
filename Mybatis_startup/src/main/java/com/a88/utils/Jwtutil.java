@@ -11,7 +11,7 @@ public class Jwtutil {
 
     private static String secretKey = "kdfjkjkdf342";
 
-    private static Long expire = 43200000L;
+    private static Long expire = 50000L;
 
 
     public static String generateJwt(Map<String, Object> claims) {

@@ -29,7 +29,7 @@ public class LoginCheckInterceptor implements HandlerInterceptor {
         }
 
         // 3. get JWT
-        String jwt = request.getHeader("token");
+        String jwt = request.getHeader("Authorization");
 
         //4. judge JWT if no this jwt
         if (!StringUtils.hasLength(jwt)) {
