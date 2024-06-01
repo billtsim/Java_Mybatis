@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace= "com.a88.mapper.productMapper">
+
+    <resultMap id="ProductResultMap" type="com.a88.Pojo.products">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="price" column="price"/>
+        <result property="originalPrice" column="originalPrice"/>
+        <result property="discount" column="discount"/>
+        <result property="category" column="category"/>
+        <result property="imageUrl" column="imageUrl"/>
+        <result property="tags" column="tags"/> <!-- 添加对tags字段的映射 -->
+        <result property="createTime" column="createTime"/> <!-- 添加对createTime字段的映射 -->
+        <result property="updateTime" column="updateTime"/>
+    </resultMap>
+
+    <sql id="commonSelect">
+        select id, name, description, price, originalPrice, category, imageUrl, tags, discount, createTime, updateTime from products
+    </sql>
+    <update id="update">
+        update db_01.products
+        <set>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="description != null and description != ''">
+                description = #{description},
+            </if>
+            <if test="originalPrice != null">
+                originalPrice = #{originalPrice},
+            </if>
+            <if test="category != null and category != ''">
+                category = #{category},
+            </if>
+            <if test="tags != null and tags != ''">
+                tags = #{tags},
+            </if>
+            <if test="discount != null">
+                discount = #{discount},
+            </if>
+            <if test="imageUrl != null and imageUrl != ''">
+                imageUrl = #{imageUrl},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="delete">
+        delete from products where id in
+        <foreach collection="ids" item="id" separator="," open="(" close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="allProducts" resultMap="ProductResultMap">
+        <include refid="commonSelect"/>
+        <where>
+            <if test="name != null and name != ''">
+                name = #{name}
+            </if>
+            <if test="category != null and category != ''">
+                AND FIND_IN_SET(#{category}, category)
+            </if>
+            <if test="tags != null and tags != ''">
+                AND FIND_IN_SET(#{tags}, tags)
+            </if>
+            <if test="minPrice != null and maxPrice != null">
+                AND price BETWEEN #{minPrice} AND #{maxPrice}
+            </if>
+        </where>
+
+
+    </select>
+
+
+</mapper>

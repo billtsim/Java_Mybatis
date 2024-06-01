@@ -1,10 +1,12 @@
-package com.a88.controller;
+package com.a88.utils;
 
 import com.a88.Pojo.cloudStorage;
 import com.google.cloud.storage.BlobId;
 import com.google.cloud.storage.BlobInfo;
 import com.google.cloud.storage.Storage;
 import com.google.cloud.storage.StorageOptions;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,6 +15,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 @Component
+@Slf4j
 public class uploadFileUtil {
 //    //@Value("${google.cloudStorage.projectID}")
 //    private String projectID;
@@ -21,6 +24,26 @@ public class uploadFileUtil {
 
     @Autowired
     private cloudStorage storage;
+
+    // Method to delete old file from Cloud Storage
+    public void deleteFile(String oldFileName) {
+        String bucketName = storage.getBucketName();
+        String projectID = storage.getProjectID();
+
+        // Get service
+        Storage storageService = StorageOptions.newBuilder().setProjectId(projectID)
+                .build().getService();
+
+        BlobId blobId = BlobId.of(bucketName, oldFileName);
+        boolean deleted = storageService.delete(blobId);
+
+        if (deleted) {
+            log.info("file was deleted from {} and file name is {}", bucketName, oldFileName);
+            System.out.println("File " + oldFileName + " was deleted from bucket " + bucketName);
+        } else {
+            System.out.println("File " + oldFileName + " not found in bucket " + bucketName);
+        }
+    }
 
     public String uploadFile(MultipartFile file) throws IOException {
 
@@ -39,6 +62,8 @@ public class uploadFileUtil {
 
         BlobId blobId = BlobId.of(bucketName, newFileName);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+
+
         // upload to Cloud Storage
         storage.createFrom(blobInfo, file.getInputStream());
         // file's access url

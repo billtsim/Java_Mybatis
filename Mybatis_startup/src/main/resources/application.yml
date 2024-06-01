@@ -25,6 +25,7 @@ spring:
     url: jdbc:mysql://localhost:3306/db_01
     username: root
     password: 1234
+
 # set file size
   servlet:
     multipart:
@@ -40,5 +41,10 @@ google:
   cloud-storage:
     projectID: JavaProject
     bucketName: fileupload-java
+
+Set-Cookie:
+  myCookie: value
+  SameSite: None
+  Secure:
 
 
