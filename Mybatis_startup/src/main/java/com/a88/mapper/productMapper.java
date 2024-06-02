@@ -9,9 +9,11 @@ import java.util.List;
 @Mapper
 public interface productMapper {
 
-    List<products> allProducts(String name, String category, String tags, Double minPrice, Double maxPrice);
+    List<products> allProducts(String name, String categories, String tags, Double minPrice, Double maxPrice);
 
     void update(products pro);
 
     void delete(ArrayList<Integer> ids);
+
+    void add(products pro);
 }

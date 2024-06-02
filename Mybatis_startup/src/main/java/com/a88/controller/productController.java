@@ -1,5 +1,6 @@
 package com.a88.controller;
 
+import com.a88.Pojo.dept;
 import com.a88.Pojo.products;
 import com.a88.Pojo.result;
 import com.a88.service.inter.productService;
@@ -38,18 +39,18 @@ public class productController {
                          @RequestParam("name") String name,
                          @RequestParam("description") String description,
                          @RequestParam("originalPrice") Double originalPrice,
-                         @RequestParam("category") String category,
+                         @RequestParam("categories") String categories,
                          @RequestParam("tags") String tags,
                          @RequestParam("discount") Double discount,
                          @RequestParam(value = "image", required = false) MultipartFile image,
                          @RequestParam(value = "oldImageUrl", required = false) String oldImageUrl) throws IOException {
-        log.info("update game: {}, {}, {}, {}, {}, {}, {}, {}, {}", id, name, description, originalPrice, category, tags, discount, image, oldImageUrl);
+        log.info("update game: {}, {}, {}, {}, {}, {}, {}, {}, {}", id, name, description, originalPrice, categories, tags, discount, image, oldImageUrl);
 
         PS.update(id,
                 name,
                 description,
                 originalPrice,
-                category,
+                categories,
                 tags,
                 discount,
                 image,
@@ -58,9 +59,24 @@ public class productController {
     }
 
     @DeleteMapping("/{ids}")
-    public result delete(@PathVariable ArrayList<Integer> ids) {
+    public result delete(@PathVariable ArrayList<Integer> ids, @RequestParam("imageFileName") String imageFileName) {
         log.info("delete operation, ids:{}", ids);
-        PS.delete(ids);
+        PS.delete(ids, imageFileName);
+        return result.success();
+    }
+
+    @PostMapping
+    public result add(
+                      @RequestParam("name") String name,
+                      @RequestParam("description") String description,
+                      @RequestParam("originalPrice") Double originalPrice,
+                      @RequestParam("categories") String categories,
+                      @RequestParam("tags") String tags,
+                      @RequestParam("discount") Double discount,
+                      @RequestParam(value = "image", required = false) MultipartFile image
+                      ) throws IOException {
+        log.info("add game: {}, {}, {}, {}, {}, {}, {}", name, description, originalPrice, categories, tags, discount, image);
+        PS.add(name, description, originalPrice, categories, tags, discount, image);
         return result.success();
     }
 

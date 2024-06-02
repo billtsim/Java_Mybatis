@@ -11,7 +11,7 @@
         <result property="price" column="price"/>
         <result property="originalPrice" column="originalPrice"/>
         <result property="discount" column="discount"/>
-        <result property="category" column="category"/>
+        <result property="categories" column="categories"/>
         <result property="imageUrl" column="imageUrl"/>
         <result property="tags" column="tags"/> <!-- 添加对tags字段的映射 -->
         <result property="createTime" column="createTime"/> <!-- 添加对createTime字段的映射 -->
@@ -19,8 +19,12 @@
     </resultMap>
 
     <sql id="commonSelect">
-        select id, name, description, price, originalPrice, category, imageUrl, tags, discount, createTime, updateTime from products
+        select id, name, description, price, originalPrice, Categories, imageUrl, tags, discount, createTime, updateTime from products
     </sql>
+    <insert id="add">
+        insert into products (name, description, originalPrice, categories, imageUrl, tags, discount)
+        values (#{name}, #{description}, #{originalPrice}, #{categories}, #{imageUrl}, #{tags}, #{discount})
+    </insert>
     <update id="update">
         update db_01.products
         <set>
@@ -33,8 +37,8 @@
             <if test="originalPrice != null">
                 originalPrice = #{originalPrice},
             </if>
-            <if test="category != null and category != ''">
-                category = #{category},
+            <if test="categories != null and categories != ''">
+                categories = #{categories},
             </if>
             <if test="tags != null and tags != ''">
                 tags = #{tags},
@@ -64,8 +68,8 @@
             <if test="name != null and name != ''">
                 name = #{name}
             </if>
-            <if test="category != null and category != ''">
-                AND FIND_IN_SET(#{category}, category)
+            <if test="categories != null and categories != ''">
+                AND FIND_IN_SET(#{categories}, categories)
             </if>
             <if test="tags != null and tags != ''">
                 AND FIND_IN_SET(#{tags}, tags)

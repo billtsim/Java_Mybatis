@@ -16,7 +16,7 @@ public class products {
     private Double price;
     private Double originalPrice;
     private Double discount; // 折扣百分比
-    private String category;
+    private String categories;
     private String imageUrl;
     private String tags;
     private LocalDateTime createTime; // 新添加的字段

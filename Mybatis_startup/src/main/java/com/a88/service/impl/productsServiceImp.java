@@ -27,13 +27,13 @@ public class productsServiceImp implements productService {
     }
 
     @Override
-    public void update(Long id, String name, String description, Double originalPrice, String category, String tags, Double discount, MultipartFile image, String oldImageUrl) throws IOException {
+    public void update(Long id, String name, String description, Double originalPrice, String categories, String tags, Double discount, MultipartFile image, String oldImageUrl) throws IOException {
         products pro = new products();
         pro.setId(id);
         pro.setName(name);
         pro.setDescription(description);
         pro.setOriginalPrice(originalPrice);
-        pro.setCategory(category);
+        pro.setCategories(categories);
         pro.setTags(tags);
         pro.setDiscount(discount);
         pro.setUpdateTime(LocalDateTime.now());
@@ -45,7 +45,23 @@ public class productsServiceImp implements productService {
     }
 
     @Override
-    public void delete(ArrayList<Integer> ids) {
+    public void delete(ArrayList<Integer> ids, String imageFileName) {
+        ULF.deleteFile(imageFileName);
         PM.delete(ids);
+    }
+
+    @Override
+    public void add(String name, String description, Double originalPrice, String categories, String tags, Double discount, MultipartFile image) throws IOException {
+        products pro = new products();
+        pro.setName(name);
+        pro.setDescription(description);
+        pro.setOriginalPrice(originalPrice);
+        pro.setCategories(categories);
+        pro.setTags(tags);
+        pro.setDiscount(discount);
+        pro.setUpdateTime(LocalDateTime.now());
+        pro.setCreateTime(LocalDateTime.now());
+        pro.setImageUrl(ULF.uploadFile(image));
+        PM.add(pro);
     }
 }
