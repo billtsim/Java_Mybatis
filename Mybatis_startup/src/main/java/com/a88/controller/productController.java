@@ -24,12 +24,12 @@ public class productController {
 
     @GetMapping
     public result allProducts(@RequestParam(required = false) String name,
-                              @RequestParam(required = false) String category,
+                              @RequestParam(required = false) String categories,
                               @RequestParam(required = false) String tags,
                               @RequestParam(required = false) Double minPrice,
                               @RequestParam(required = false) Double maxPrice) {
         log.info("get all products info from database");
-        List<products> products = PS.allProducts(name, category, tags, minPrice, maxPrice);
+        List<products> products = PS.allProducts(name, categories, tags, minPrice, maxPrice);
 
         return result.success(products);
     }

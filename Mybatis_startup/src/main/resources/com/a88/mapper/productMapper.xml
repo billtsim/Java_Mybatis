@@ -66,7 +66,7 @@
         <include refid="commonSelect"/>
         <where>
             <if test="name != null and name != ''">
-                name = #{name}
+                name like concat('%', #{name}, '%')
             </if>
             <if test="categories != null and categories != ''">
                 AND FIND_IN_SET(#{categories}, categories)

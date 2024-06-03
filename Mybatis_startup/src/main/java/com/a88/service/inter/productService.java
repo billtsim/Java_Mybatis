@@ -9,7 +9,7 @@ import java.util.List;
 
 
 public interface productService {
-    List<products> allProducts(String name, String category, String tags, Double minPrice, Double maxPrice);
+    List<products> allProducts(String name, String categories, String tags, Double minPrice, Double maxPrice);
 
     void update( Long id, String name, String description, Double originalPrice, String categories, String tags, Double discount, MultipartFile image, String oldImageUrl) throws IOException;
 

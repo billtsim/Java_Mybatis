@@ -22,8 +22,8 @@ public class productsServiceImp implements productService {
     @Autowired
     private uploadFileUtil ULF;
     @Override
-    public List<products> allProducts(String name, String category, String tags, Double minPrice, Double maxPrice) {
-        return PM.allProducts(name, category, tags, minPrice, maxPrice);
+    public List<products> allProducts(String name, String categories, String tags, Double minPrice, Double maxPrice) {
+        return PM.allProducts(name, categories, tags, minPrice, maxPrice);
     }
 
     @Override
