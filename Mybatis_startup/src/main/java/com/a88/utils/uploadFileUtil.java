@@ -26,25 +26,32 @@ public class uploadFileUtil {
     private cloudStorage storage;
 
     // Method to delete old file from Cloud Storage
+    private Storage getStorageService() {
+        String projectID = storage.getProjectID();
+        return StorageOptions.newBuilder().setProjectId(projectID).build().getService();
+    }
+
+    // Method to delete old file from Cloud Storage
     public void deleteFile(String oldFileName) {
         String bucketName = storage.getBucketName();
-        String projectID = storage.getProjectID();
-
-        // Get service
-        Storage storageService = StorageOptions.newBuilder().setProjectId(projectID)
-                .build().getService();
+        Storage storageService = getStorageService();
 
         BlobId blobId = BlobId.of(bucketName, oldFileName);
         boolean deleted = storageService.delete(blobId);
 
         if (deleted) {
-            log.info("file was deleted from {} and file name is {}", bucketName, oldFileName);
+            log.info("File was deleted from {} and file name is {}", bucketName, oldFileName);
             System.out.println("File " + oldFileName + " was deleted from bucket " + bucketName);
         } else {
             System.out.println("File " + oldFileName + " not found in bucket " + bucketName);
         }
     }
 
+    public void deleteFiles(String[] oldFileNames) {
+        for (String fileName : oldFileNames) {
+            deleteFile(fileName);
+        }
+    }
     public String uploadFile(MultipartFile file) throws IOException {
 
         String bucketName = storage.getBucketName();

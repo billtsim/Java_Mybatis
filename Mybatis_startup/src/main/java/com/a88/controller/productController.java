@@ -42,9 +42,9 @@ public class productController {
                          @RequestParam("categories") String categories,
                          @RequestParam("tags") String tags,
                          @RequestParam("discount") Double discount,
-                         @RequestParam(value = "image", required = false) MultipartFile image,
-                         @RequestParam(value = "oldImageUrl", required = false) String oldImageUrl) throws IOException {
-        log.info("update game: {}, {}, {}, {}, {}, {}, {}, {}, {}", id, name, description, originalPrice, categories, tags, discount, image, oldImageUrl);
+                         @RequestParam(value = "images", required = false) MultipartFile[] images,
+                         @RequestParam(value = "oldImageUrl", required = false) String[] oldImageUrl) throws IOException {
+        log.info("update game: {}, {}, {}, {}, {}, {}, {}, {}, {}", id, name, description, originalPrice, categories, tags, discount, images, oldImageUrl);
 
         PS.update(id,
                 name,
@@ -53,7 +53,7 @@ public class productController {
                 categories,
                 tags,
                 discount,
-                image,
+                images,
                 oldImageUrl);
         return result.success();
     }
@@ -73,7 +73,7 @@ public class productController {
                       @RequestParam("categories") String categories,
                       @RequestParam("tags") String tags,
                       @RequestParam("discount") Double discount,
-                      @RequestParam(value = "image", required = false) MultipartFile image
+                      @RequestParam(value = "image", required = false) MultipartFile[] image
                       ) throws IOException {
         log.info("add game: {}, {}, {}, {}, {}, {}, {}", name, description, originalPrice, categories, tags, discount, image);
         PS.add(name, description, originalPrice, categories, tags, discount, image);
