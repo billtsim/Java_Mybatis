@@ -36,6 +36,8 @@ mybatis:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     map-underscore-to-camel-case: true
+  type-handlers-package: com.a88.controller
+  mapper-locations: classpath:C:\Users\User\OneDrive\桌面\git\Java-SpringAI\abccc\Mybatis_startup\src\main\resources\com\a88\mapper\*.xml
 # google的cloud storage 配置
 google:
   cloud-storage:

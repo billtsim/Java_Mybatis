@@ -16,14 +16,18 @@
         <result property="tags" column="tags"/> <!-- 添加对tags字段的映射 -->
         <result property="createTime" column="createTime"/> <!-- 添加对createTime字段的映射 -->
         <result property="updateTime" column="updateTime"/>
+        <result property="mainImage" column="mainImage"/>
+        <result property="minRequirements" column="minRequirements"/>
+        <result property="recRequirements" column="recRequirements"/>
     </resultMap>
 
     <sql id="commonSelect">
-        select id, name, description, price, originalPrice, Categories, imageUrl, tags, discount, createTime, updateTime from products
+        select id, name, description, price, originalPrice, categories, imageUrl, tags, discount, createTime, updateTime, mainImage, minRequirements, recRequirements from products
     </sql>
+
     <insert id="add">
-        insert into products (name, description, originalPrice, categories, imageUrl, tags, discount)
-        values (#{name}, #{description}, #{originalPrice}, #{categories}, #{imageUrl}, #{tags}, #{discount})
+        insert into products (name, description, originalPrice, categories, imageUrl, tags, discount, mainImage, minRequirements, recRequirements)
+        values (#{name}, #{description}, #{originalPrice}, #{categories}, #{imageUrl}, #{tags}, #{discount}, #{mainImage}, #{minRequirements}, #{recRequirements})
     </insert>
     <update id="update">
         update db_01.products
@@ -46,11 +50,20 @@
             <if test="discount != null">
                 discount = #{discount},
             </if>
-            <if test="imageUrl != null and imageUrl != ''">
+            <if test="imageUrl != ''">
                 imageUrl = #{imageUrl},
             </if>
             <if test="updateTime != null">
-                updateTime = #{updateTime}
+                updateTime = #{updateTime},
+            </if>
+            <if test="mainImage != ''">
+                mainImage = #{mainImage},
+            </if>
+            <if test="minRequirements != '' and minRequirements != null">
+                minRequirements = #{minRequirements},
+            </if>
+            <if test="recRequirements != '' and recRequirements != null">
+                recRequirements = #{recRequirements}
             </if>
         </set>
         where id = #{id}
@@ -61,7 +74,6 @@
             #{id}
         </foreach>
     </delete>
-
     <select id="allProducts" resultMap="ProductResultMap">
         <include refid="commonSelect"/>
         <where>

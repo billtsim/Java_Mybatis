@@ -1,5 +1,7 @@
 package com.a88.Pojo;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.google.gson.JsonObject;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,4 +23,7 @@ public class products {
     private String tags;
     private LocalDateTime createTime; // 新添加的字段
     private LocalDateTime updateTime;
+    private String mainImage;
+    private SystemRequirements minRequirements;
+    private SystemRequirements recRequirements;
 }

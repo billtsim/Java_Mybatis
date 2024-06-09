@@ -42,9 +42,14 @@ public class productController {
                          @RequestParam("categories") String categories,
                          @RequestParam("tags") String tags,
                          @RequestParam("discount") Double discount,
+                         @RequestParam("existingImages") String existingImages, // 旧图片 URL
                          @RequestParam(value = "images", required = false) MultipartFile[] images,
-                         @RequestParam(value = "oldImageUrl", required = false) String[] oldImageUrl) throws IOException {
-        log.info("update game: {}, {}, {}, {}, {}, {}, {}, {}, {}", id, name, description, originalPrice, categories, tags, discount, images, oldImageUrl);
+                         @RequestParam(value = "oldImageUrl", required = false) String[] oldImageUrl,
+                         @RequestParam(value = "mainImage", required = false) MultipartFile mainImage,
+                         @RequestParam(value = "minRequirements") String minRequirementsJson,
+                         @RequestParam(value = "recRequirements") String recRequirementsJson,
+                         @RequestParam(value = "existingMainImage", required = false) String existingMainImage) throws IOException {
+        log.info("update game: {}, {}, {}, {}, {}, {}, {}, {}, {},{},{},{},{},{}", id, name, description, originalPrice, categories, tags, discount,existingImages, images, oldImageUrl, mainImage,minRequirementsJson, recRequirementsJson,existingMainImage);
 
         PS.update(id,
                 name,
@@ -53,8 +58,13 @@ public class productController {
                 categories,
                 tags,
                 discount,
+                existingImages,
                 images,
-                oldImageUrl);
+                oldImageUrl,
+                mainImage,
+                minRequirementsJson,
+                recRequirementsJson,
+                existingMainImage);
         return result.success();
     }
 
@@ -73,10 +83,13 @@ public class productController {
                       @RequestParam("categories") String categories,
                       @RequestParam("tags") String tags,
                       @RequestParam("discount") Double discount,
-                      @RequestParam(value = "image", required = false) MultipartFile[] image
+                      @RequestParam(value = "image", required = false) MultipartFile[] image,
+                      @RequestParam(value = "mainImage", required = false) MultipartFile mainImage,
+                      @RequestParam(value = "minRequirements") String minRequirementsJson,
+                      @RequestParam("recRequirements") String recRequirementsJson
                       ) throws IOException {
-        log.info("add game: {}, {}, {}, {}, {}, {}, {}", name, description, originalPrice, categories, tags, discount, image);
-        PS.add(name, description, originalPrice, categories, tags, discount, image);
+        log.info("add game: {}, {}, {}, {}, {}, {}, {}, {}, {}, {}", name, description, originalPrice, categories, tags, discount, image, mainImage, minRequirementsJson, recRequirementsJson);
+        PS.add(name, description, originalPrice, categories, tags, discount, image, mainImage, minRequirementsJson, recRequirementsJson);
         return result.success();
     }
 

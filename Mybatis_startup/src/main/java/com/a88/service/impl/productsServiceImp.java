@@ -1,10 +1,12 @@
 package com.a88.service.impl;
 
+import com.a88.Pojo.SystemRequirements;
 import com.a88.Pojo.products;
 import com.a88.utils.uploadFileUtil;
 import com.a88.mapper.productMapper;
 import com.a88.service.inter.productService;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,9 +32,8 @@ public class productsServiceImp implements productService {
     }
 
     @Override
-    public void update(Long id, String name, String description, Double originalPrice, String categories, String tags, Double discount, MultipartFile[] images, String[] oldImageUrl) throws IOException {
+    public void update(Long id, String name, String description, Double originalPrice, String categories, String tags, Double discount, String existingImages, MultipartFile[] images, String[] oldImageUrl, MultipartFile mainImage, String minRequirementsJson, String recRequirementsJson, String existingMainImage) throws IOException {
         // 处理 tags，去除多余空格
-
         String[] tagsArray = tags.split(",");
         String trimmedTags = Arrays.stream(tagsArray)
                 .map(String::trim)
@@ -43,7 +44,7 @@ public class productsServiceImp implements productService {
         String trimmedCate = Arrays.stream(cateArray)
                 .map(String::trim)
                 .collect(Collectors.joining(","));
-
+        // new product object
         products pro = new products();
         pro.setId(id);
         pro.setName(name);
@@ -53,13 +54,58 @@ public class productsServiceImp implements productService {
         pro.setTags(trimmedTags);
         pro.setDiscount(discount);
         pro.setUpdateTime(LocalDateTime.now());
-        ULF.deleteFiles(oldImageUrl);
+        // old file的刪除
+        if (oldImageUrl != null && oldImageUrl.length > 0 ) {
+            ULF.deleteFiles(oldImageUrl);
+        }
+
+        // 拼接用
         StringBuilder imageUrl2 = new StringBuilder();
-        for (MultipartFile multipartFile : images) {
-            imageUrl2.append(ULF.uploadFile(multipartFile));
+        // 這樣可以把新upload的file的url放在後面
+        if (existingImages != null && !existingImages.trim().isEmpty()) {
+            imageUrl2.append(existingImages);
             imageUrl2.append(",");
         }
-        pro.setImageUrl(imageUrl2.toString());
+        // upload file再拿url
+        if (images != null && images.length > 0) {
+            // only one image file
+            if (images.length == 1) {
+                for (MultipartFile multipartFile : images) {
+                    imageUrl2.append(ULF.uploadFile(multipartFile));
+                }
+            } else {
+                // 多於一個的image file
+                for (MultipartFile multipartFile : images) {
+                    imageUrl2.append(ULF.uploadFile(multipartFile));
+                    imageUrl2.append(",");
+                }
+            }
+        }
+
+        // 移除最后的逗号（如果有）
+        String finalImageUrl = imageUrl2.toString();
+        if (finalImageUrl.endsWith(",")) {
+            finalImageUrl = finalImageUrl.substring(0, finalImageUrl.length() - 1);
+        }
+
+        pro.setImageUrl(finalImageUrl.isEmpty() ? null : finalImageUrl);
+        if (mainImage == null) {
+            if (existingMainImage != null) {
+                pro.setMainImage(existingMainImage);
+            } else {
+                pro.setMainImage(null);
+            }
+        } else {
+            pro.setMainImage(ULF.uploadFile(mainImage));
+        }
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        SystemRequirements minRequirements = objectMapper.readValue(minRequirementsJson, SystemRequirements.class);
+        SystemRequirements recRequirements = objectMapper.readValue(recRequirementsJson, SystemRequirements.class);
+
+        pro.setMinRequirements(minRequirements);
+        pro.setRecRequirements(recRequirements);
+
         PM.update(pro);
     }
 
@@ -70,7 +116,7 @@ public class productsServiceImp implements productService {
     }
 
     @Override
-    public void add(String name, String description, Double originalPrice, String categories, String tags, Double discount, MultipartFile[] image) throws IOException {
+    public void add(String name, String description, Double originalPrice, String categories, String tags, Double discount, MultipartFile[] image, MultipartFile mainImage, String minRequirementsJson, String recRequirementsJson) throws IOException {
         products pro = new products();
         pro.setName(name);
         pro.setDescription(description);
@@ -80,14 +126,36 @@ public class productsServiceImp implements productService {
         pro.setDiscount(discount);
         pro.setUpdateTime(LocalDateTime.now());
         pro.setCreateTime(LocalDateTime.now());
-        System.out.println(image);
-        System.out.println(image.toString());
+
         StringBuilder imageUrl = new StringBuilder();
-        for (MultipartFile multipartFile : image) {
-            imageUrl.append(ULF.uploadFile(multipartFile));
-            imageUrl.append(",");
+        if (image != null && image.length > 0) {
+            // only one image file
+            if (image.length == 1) {
+                for (MultipartFile multipartFile : image) {
+                    imageUrl.append(ULF.uploadFile(multipartFile));
+                }
+            } else {
+                // 多於一個的image file
+                for (int i = 0; i < image.length; i++) {
+                    if (i == (image.length -1)) {
+                        imageUrl.append(ULF.uploadFile(image[i]));
+                    } else {
+                        imageUrl.append(ULF.uploadFile(image[i]));
+                        imageUrl.append(",");
+                    }
+
+                }
+            }
         }
         pro.setImageUrl(imageUrl.toString());
+        pro.setMainImage(ULF.uploadFile(mainImage));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        SystemRequirements minRequirements = objectMapper.readValue(minRequirementsJson, SystemRequirements.class);
+        SystemRequirements recRequirements = objectMapper.readValue(recRequirementsJson, SystemRequirements.class);
+
+        pro.setMinRequirements(minRequirements);
+        pro.setRecRequirements(recRequirements);
         PM.add(pro);
     }
 }
