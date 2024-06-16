@@ -74,7 +74,7 @@ public class uploadFileUtil {
         // upload to Cloud Storage
         storage.createFrom(blobInfo, file.getInputStream());
         // file's access url
-        String url = "https://storage.cloud.google.com/" + bucketName + "/" + newFileName;
+        String url = "https://storage.googleapis.com/" + bucketName + "/" + newFileName;
 
         System.out.println("File " + file.getOriginalFilename() + " uploaded to bucket " + bucketName + " as " + newFileName + " file url is: " + url);
 

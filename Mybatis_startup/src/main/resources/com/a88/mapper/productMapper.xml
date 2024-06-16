@@ -90,8 +90,46 @@
                 AND price BETWEEN #{minPrice} AND #{maxPrice}
             </if>
         </where>
+        <if test="sortBy != null and sortBy != ''">
+            ORDER BY
+            <choose>
+                <when test="sortBy == 'priceAsc'">
+                    price ASC
+                </when>
+                <when test="sortBy == 'priceDesc'">
+                    price DESC
+                </when>
+                <when test="sortBy == 'nameAsc'">
+                    name ASC
+                </when>
+                <when test="sortBy == 'createTime'">
+                    createTime DESC
+                </when>
+            </choose>
+        </if>
+        <if test="offset != -1">
+            LIMIT #{offset}, #{limit}
+        </if>
 
+    </select>
 
+    <select id="countProducts" resultType="java.lang.Integer">
+        SELECT COUNT(*)
+        FROM products
+        <where>
+            <if test="name != null and name != ''">
+                name LIKE CONCAT('%', #{name}, '%')
+            </if>
+            <if test="categories != null and categories != ''">
+                AND FIND_IN_SET(#{categories}, categories)
+            </if>
+            <if test="tags != null and tags != ''">
+                AND FIND_IN_SET(#{tags}, tags)
+            </if>
+            <if test="minPrice != null and maxPrice != null">
+                AND price BETWEEN #{minPrice} AND #{maxPrice}
+            </if>
+        </where>
     </select>
 
 

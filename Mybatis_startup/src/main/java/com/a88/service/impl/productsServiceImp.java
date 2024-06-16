@@ -27,8 +27,15 @@ public class productsServiceImp implements productService {
     @Autowired
     private uploadFileUtil ULF;
     @Override
-    public List<products> allProducts(String name, String categories, String tags, Double minPrice, Double maxPrice) {
-        return PM.allProducts(name, categories, tags, minPrice, maxPrice);
+    public List<products> allProducts(String name, String categories, String tags, Double minPrice, Double maxPrice, String sortBy, Integer page, Integer limit) {
+        if (page != null ) {
+            int offset = (page - 1) * limit;
+            return PM.allProducts(name, categories, tags, minPrice, maxPrice, sortBy, offset, limit);
+        } else {
+            int offset = -1;
+            return PM.allProducts(name, categories, tags, minPrice, maxPrice, sortBy, offset, limit);
+        }
+
     }
 
     @Override
@@ -157,5 +164,10 @@ public class productsServiceImp implements productService {
         pro.setMinRequirements(minRequirements);
         pro.setRecRequirements(recRequirements);
         PM.add(pro);
+    }
+
+    @Override
+    public int countProducts(String name, String categories, String tags, Double minPrice, Double maxPrice) {
+        return PM.countProducts(name, categories, tags, minPrice, maxPrice);
     }
 }

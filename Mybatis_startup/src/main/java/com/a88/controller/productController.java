@@ -27,11 +27,26 @@ public class productController {
                               @RequestParam(required = false) String categories,
                               @RequestParam(required = false) String tags,
                               @RequestParam(required = false) Double minPrice,
-                              @RequestParam(required = false) Double maxPrice) {
+                              @RequestParam(required = false) Double maxPrice,
+                              @RequestParam(required = false) String sortBy,
+                              @RequestParam(value = "page", required = false) Integer page,
+                              @RequestParam(required = false) Integer limit
+                              ) {
         log.info("get all products info from database");
-        List<products> products = PS.allProducts(name, categories, tags, minPrice, maxPrice);
+        List<products> products = PS.allProducts(name, categories, tags, minPrice, maxPrice, sortBy, page, limit);
 
         return result.success(products);
+    }
+
+    @GetMapping("/count")
+    public result countProducts(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "categories", required = false) String categories,
+            @RequestParam(value = "tags", required = false) String tags,
+            @RequestParam(value = "minPrice", required = false) Double minPrice,
+            @RequestParam(value = "maxPrice", required = false) Double maxPrice
+    ) {
+        return result.success(PS.countProducts(name, categories, tags, minPrice, maxPrice)) ;
     }
 
     @PutMapping
