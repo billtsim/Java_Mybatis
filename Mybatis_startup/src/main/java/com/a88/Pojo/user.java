@@ -9,7 +9,8 @@ public class user {
     private Short age;
     private Short gender;
     private String phone;
-    private String abc;
+    private String abd;
+
 
 
     public user() {
