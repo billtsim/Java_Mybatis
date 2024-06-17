@@ -21,4 +21,8 @@ public interface productService {
     void add(String name, String description, Double originalPrice, String categories, String tags, Double discount, MultipartFile[] image, MultipartFile mainImage, String minRequirementsJson, String recRequirementsJson) throws IOException;
 
     int countProducts(String name, String categories, String tags, Double minPrice, Double maxPrice);
+
+    ArrayList<String> allCategories();
+
+    ArrayList<String> allTags();
 }

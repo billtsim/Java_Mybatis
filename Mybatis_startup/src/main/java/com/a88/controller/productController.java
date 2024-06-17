@@ -49,6 +49,16 @@ public class productController {
         return result.success(PS.countProducts(name, categories, tags, minPrice, maxPrice)) ;
     }
 
+    @GetMapping("/categories")
+    public result allCategories() {
+        return result.success(PS.allCategories());
+    }
+
+    @GetMapping("/tags")
+    public result allTags() {
+        return result.success(PS.allTags());
+    }
+
     @PutMapping
     public result update(@RequestParam("id") Long id,
                          @RequestParam("name") String name,

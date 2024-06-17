@@ -132,5 +132,12 @@
         </where>
     </select>
 
+    <select id="allCategories" resultType="java.lang.String">
+        select name from categories
+    </select>
+    <select id="allTags" resultType="java.lang.String">
+        select name from tags
+    </select>
+
 
 </mapper>

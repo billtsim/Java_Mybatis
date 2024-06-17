@@ -18,4 +18,8 @@ public interface productMapper {
     void add(products pro);
 
     int countProducts(String name, String categories, String tags, Double minPrice, Double maxPrice);
+
+    ArrayList<String> allCategories();
+
+    ArrayList<String> allTags();
 }

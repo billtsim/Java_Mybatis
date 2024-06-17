@@ -170,4 +170,14 @@ public class productsServiceImp implements productService {
     public int countProducts(String name, String categories, String tags, Double minPrice, Double maxPrice) {
         return PM.countProducts(name, categories, tags, minPrice, maxPrice);
     }
+
+    @Override
+    public ArrayList<String> allCategories() {
+        return PM.allCategories();
+    }
+
+    @Override
+    public ArrayList<String> allTags() {
+        return PM.allTags();
+    }
 }
